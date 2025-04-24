@@ -1,5 +1,5 @@
-import {CronJob} from 'cron';
 import {inject} from '@loopback/core';
+import {CronJob} from 'cron';
 import {SimulatedDealerRepository} from '../repositories/simulated-dealer.repository';
 import {EmailQueueService} from '../services/email-queue.service';
 
@@ -14,26 +14,37 @@ export class FirstOfMonthJob extends CronJob {
   ) {
     const handler = async () => {
       const now = new Date();
-      const month = now.getMonth() + 1;
-      const year = now.getFullYear();
+      const currentMonth = now.getMonth(); // 0-based (Jan = 0)
+      const currentYear = now.getFullYear();
 
-      const start = new Date(year, month - 1, 1);
-      const end = new Date(year, month, 1);
+      const start = new Date(currentYear, currentMonth, 1);
+      const end = new Date(currentYear, currentMonth + 1, 1);
 
-      console.log(start);
-      console.log(end);
+      console.log('Assessment window:', start, 'to', end);
 
       const repo = new SimulatedDealerRepository();
-      const dealers = await repo.findByAssessmentWindow(start, end);
+      const dealers = await repo.findAssessmentsBeforeNow();
 
       if (dealers.length === 0) {
-        console.log('No dealers to notify this month.');
+        console.log('No dealers found for current month window.');
         return;
       }
 
-      for (const d of dealers) {
-        // await emailQueue.enqueueEmail(d.email, d.dealerCode, month);
-        console.log(`Enqueued reminder for ${d.dealerCode} <${d.email}>`);
+      for (const dealer of dealers) {
+        const assessmentDate = new Date(dealer.assessmentStartMonth);
+
+        const isEarlierMonth =
+          assessmentDate.getFullYear() < currentYear ||
+          (assessmentDate.getFullYear() === currentYear &&
+            assessmentDate.getMonth() < currentMonth);
+
+        if (isEarlierMonth) {
+          // If assessment is in an earlier month than current
+          console.log(
+            `Enqueued reminder for ${dealer.code} - earlier month: ${dealer.assessmentStartMonth}`,
+          );
+          // await this.emailQueue.enqueueEmail(dealer.email, dealer.code, currentMonth + 1); // +1 for human-readable month
+        }
       }
     };
 

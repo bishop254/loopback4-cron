@@ -1,0 +1,11 @@
+{
+    "id": 100,
+    "assessors": [
+        358 // id from user ( earlier shared for email reminder )
+    ],
+    "auditStartDate": "2025-01-23T00:00:00.000+05:30", // audit scheduled date
+    "created_on": "2025-04-24T09:48:56.494Z",
+    "vendorCode": "543211",
+    "dealerId": 391, // spoc id
+    "vendorId": 1812 // id of deaeler
+}

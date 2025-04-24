@@ -1,0 +1,4 @@
+//dealerZone
+const zonalOfficeList = [{ name: "Central", value: 1 }, { name: "East", value: 2 }, { name: "North", value: 3 }, { name: "South", value: 9 }, { name: "South1", value: 4 }, { name: "South2", value: 5 }, { name: "West", value: 8 }, { name: "West1", value: 6 }, { name: "West2", value: 7 }]
+//dealerCategory
+const dealerType = [{ name: 'Authorized Main Dealer', value: 1 }, { name: 'Authorized Dealer', value: 2 }, { name: 'Authorized Parts Stockist (APS)', value: 3 }, { name: 'Area Office', value: 4 }]

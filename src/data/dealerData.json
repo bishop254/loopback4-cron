@@ -1,0 +1,96 @@
+[
+    {
+		"id": 391,
+		"vendorCodes": [
+			{
+				"id": 1705,
+				"code": "D12345",
+
+				"dealerName": "Demo Dealer ",
+				"dealerSPOC": "Demo",
+				"dealerCategory": 2,
+				"dealerZone": 5,
+				"dealerLocation": "Cheannai",
+				"dealerCountry": "India",
+				"dealerAO": "CH",
+				"service": {
+					"areaManagerName": "Area Manager Name",
+					"areaManagerMailId": "serviceam@test.com",
+					"zonalPlannerName": "Zonal Planner Name ",
+					"zonalPlannerMailId": "servicepl@test.com",
+					"regionalManagerName": "Regional Manager Name",
+					"regionalManagerMailId": "servicerm@test.com"
+				},
+				"sales": {
+					"areaManagerName": "Area Manager Name",
+					"areaManagerMailId": "serviceam@test.com",
+					"zonalPlannerName": "Zonal Planner Name ",
+					"zonalPlannerMailId": "servicepl@test.com",
+					"regionalManagerName": "Regional Manager Name",
+					"regionalManagerMailId": "servicerm@test.com"
+				},
+				"aps": {
+					"areaManagerName": "Area Manager Name",
+					"areaManagerMailId": "serviceam@test.com",
+					"regionalManagerName": "Regional Manager Name",
+					"regionalManagerMailId": "servicerm@test.com",
+					"hoPlannerName": "Ho Planner Name",
+					"hoPlannerMailId": "HoPlanner@test.com"
+				},
+				"ao": {
+					"areaCommercialManagerName": "Area Commercial Manager Name",
+					"areaCommercialManagerMailId": "areacommanager@test.com",
+					"regionalCommercialManagerName": "Regional Commercial Manager",
+					"regionalCommercialManagerMailId": "regcommanager@test.com"
+				},
+				"userProfileId": 391,
+				"assessmentStartMonth": "2024-12-31T18:30:00.000Z"
+			},
+			{
+				"id": 1812,
+				"code": "543211",
+
+				"dealerName": "Anadhu Demo",
+				"dealerSPOC": "Anandhu",
+				"dealerCategory": 2,
+				"dealerZone": 1,
+				"dealerLocation": "Chennai",
+				"dealerCountry": "India",
+				"dealerAO": "Chennai",
+				"service": {
+					"areaManagerName": "Area Manager Name",
+					"areaManagerMailId": "serviceam@test.com",
+					"zonalPlannerName": "Zonal Planner Name ",
+					"zonalPlannerMailId": "servicepl@test.com",
+					"regionalManagerName": "Regional Manager Name",
+					"regionalManagerMailId": "servicerm@test.com"
+				},
+				"sales": {
+					"areaManagerName": "Area Manager Name",
+					"areaManagerMailId": "serviceam@test.com",
+					"zonalPlannerName": "Zonal Planner Name ",
+					"zonalPlannerMailId": "servicepl@test.com",
+					"regionalManagerName": "Regional Manager Name",
+					"regionalManagerMailId": "servicerm@test.com"
+				},
+				"aps": {
+					"areaManagerName": "Area Manager Name",
+					"areaManagerMailId": "serviceam@test.com",
+					"regionalManagerName": "Regional Manager Name",
+					"regionalManagerMailId": "servicerm@test.com",
+					"hoPlannerName": "Ho Planner Name",
+					"hoPlannerMailId": "HoPlanner@test.com"
+				},
+				"ao": {
+					"areaCommercialManagerName": "Area Commercial Manager Name",
+					"areaCommercialManagerMailId": "areacommanager@test.com",
+					"regionalCommercialManagerName": "Regional Commercial Manager",
+					"regionalCommercialManagerMailId": "regcommanager@test.com"
+				},
+				"userProfileId": 391,
+				"assessmentStartMonth": "2024-12-31T18:30:00.000Z"
+			}
+		],
+		"email": "test@test.com"
+	}
+]
