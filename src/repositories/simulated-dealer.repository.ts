@@ -50,7 +50,7 @@ export class SimulatedDealerRepository {
       .flatMap(dealer =>
         dealer.vendorCodes.map(vc => ({
           ...vc,
-          email: dealer.email, // include top-level dealer email if needed
+          email: dealer.email,
         })),
       )
       .filter(vendor => new Date(vendor.assessmentStartMonth) < now);
