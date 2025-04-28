@@ -1,18 +1,19 @@
 import {BootMixin} from '@loopback/boot';
 import {ApplicationConfig} from '@loopback/core';
+import {asCronJob, CronComponent} from '@loopback/cron';
+import {RepositoryMixin} from '@loopback/repository';
+import {RestApplication} from '@loopback/rest';
 import {
   RestExplorerBindings,
   RestExplorerComponent,
 } from '@loopback/rest-explorer';
-import {RepositoryMixin} from '@loopback/repository';
-import {RestApplication} from '@loopback/rest';
 import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {MySequence} from './sequence';
-import {asCronJob, CronComponent} from '@loopback/cron';
 
+import {MonthJob} from './services/cron';
+import {CalibrationMonthJob} from './services/cron-msi';
 import {EmailQueueService} from './services/email-queue.service';
-import {FirstOfMonthJob} from './services/cron';
 
 export {ApplicationConfig};
 
@@ -23,8 +24,9 @@ export class Loopback4CronApplication extends BootMixin(
     super(options);
 
     this.component(CronComponent);
-    this.bind('cron.jobs.firstOfMonth')
-      .toClass(FirstOfMonthJob)
+    this.bind('cron.jobs.firstOfMonth').toClass(MonthJob).apply(asCronJob);
+    this.bind('cron.jobs.calibrationMonth')
+      .toClass(CalibrationMonthJob)
       .apply(asCronJob);
 
     this.bind('aws.sqs.url').to(
