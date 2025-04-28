@@ -1,63 +1,103 @@
 import {inject} from '@loopback/core';
 import {CronJob} from 'cron';
-import {SimulatedDealerRepository} from '../repositories/simulated-dealer.repository';
+import dealerAssessments from '../data/dealerAssessmentSubmission.json';
+import dealersData from '../data/dealerData.json';
+import {DealerAssessment} from '../repositories/simulated-dealer-assesment.repository';
+import {Dealer} from '../repositories/simulated-dealer.repository';
 import {EmailQueueService} from '../services/email-queue.service';
 
-/**
- * Cron job that runs at midnight on the 24th of each month,
- * and also fires immediately if the server starts on the 24th.
- */
-export class FirstOfMonthJob extends CronJob {
+export class MonthJob extends CronJob {
   constructor(
     @inject('services.EmailQueueService')
     private emailQueue: EmailQueueService,
   ) {
-    const handler = async () => {
+    const runReminderCheck = async () => {
       const now = new Date();
-      const currentMonth = now.getMonth(); // 0-based (Jan = 0)
+      const currentDay = now.getDate();
+      const currentMonth = (now.getMonth() + 1).toString().padStart(2, '0');
       const currentYear = now.getFullYear();
+      const currentPeriod = `${currentMonth}-${currentYear}`;
 
-      const start = new Date(currentYear, currentMonth, 1);
-      const end = new Date(currentYear, currentMonth + 1, 1);
+      console.log('Current Reporting Period:', currentPeriod);
 
-      console.log('Assessment window:', start, 'to', end);
+      const submittedVendorIds = new Set<number>();
+      (dealerAssessments as DealerAssessment[]).forEach(assessment => {
+        if (assessment.reporting_period.includes(currentPeriod)) {
+          submittedVendorIds.add(assessment.vendorId);
+        }
+      });
 
-      const repo = new SimulatedDealerRepository();
-      const dealers = await repo.findAssessmentsBeforeNow();
+      console.log(
+        'Vendors who have submitted:',
+        Array.from(submittedVendorIds),
+      );
 
-      if (dealers.length === 0) {
-        console.log('No dealers found for current month window.');
-        return;
-      }
+      const dealers = dealersData as Dealer[];
+
+      const notSubmittedVendors: {
+        dealerEmail: string;
+        vendorCode: string;
+        vendorId: number;
+      }[] = [];
 
       for (const dealer of dealers) {
-        const assessmentDate = new Date(dealer.assessmentStartMonth);
+        for (const vendorCode of dealer.vendorCodes) {
+          const vendorId = vendorCode.id;
 
-        const isEarlierMonth =
-          assessmentDate.getFullYear() < currentYear ||
-          (assessmentDate.getFullYear() === currentYear &&
-            assessmentDate.getMonth() < currentMonth);
+          if (!submittedVendorIds.has(vendorId)) {
+            notSubmittedVendors.push({
+              dealerEmail: dealer.email,
+              vendorCode: vendorCode.code,
+              vendorId: vendorId,
+            });
 
-        if (isEarlierMonth) {
-          // If assessment is in an earlier month than current
-          console.log(
-            `Enqueued reminder for ${dealer.code} - earlier month: ${dealer.assessmentStartMonth}`,
-          );
-          // await this.emailQueue.enqueueEmail(dealer.email, dealer.code, currentMonth + 1); // +1 for human-readable month
+            if (currentDay === 1 || currentDay === 15) {
+              console.log(
+                `Vendor ${vendorCode.code} (${vendorId}) has NOT submitted. Sending reminder to ${dealer.email}`,
+              );
+              // Send the email individually on 1st and 15th
+              // await this.emailQueue.enqueueEmail(dealer.email, vendorCode.code, currentPeriod);
+            }
+          } else {
+            console.log(
+              `Vendor ${vendorCode.code} (${vendorId}) already submitted. No email sent.`,
+            );
+          }
+        }
+      }
+
+      if (currentDay === 28) {
+        if (notSubmittedVendors.length > 0) {
+          const summary = notSubmittedVendors
+            .map(
+              v =>
+                `VendorCode: ${v.vendorCode} (VendorId: ${v.vendorId}) - Dealer Email: ${v.dealerEmail}`,
+            )
+            .join('\n');
+
+          console.log('Sending full non-submission report to eye@gmail.com');
+          console.log(summary);
+
+          // Example: Send the full list as an email to eye@gmail.com
+          // await this.emailQueue.sendSummaryReport('eye@gmail.com', summary);
+        } else {
+          console.log('All vendors have submitted. No summary email needed.');
         }
       }
     };
 
     super({
-      cronTime: '0 0 0 24 * *',
-      onTick: handler,
+      cronTime: '0 0 0 1,15,25 * *',
+      onTick: runReminderCheck,
       start: false,
     });
 
-    if (new Date().getDate() === 24) {
-      console.log('Running job immediately because today is the 24th.');
-
-      handler();
+    const today = new Date().getDate();
+    if (today === 1 || today === 15 || today === 25) {
+      console.log(
+        'Running job immediately because today matches 1, 15, or 25.',
+      );
+      runReminderCheck();
     }
 
     this.start();
