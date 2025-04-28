@@ -3,9 +3,18 @@
 		"id": 87,
 		"modified_on": "2025-04-24T09:05:04.638Z",
 		"status": "Approved",
-		"type": 2,
-		"dealerAssessmentAssignmentId": 99, // id of msi calibration for dealer audit
-        "dealerId": 391, // spoc id
-        "vendorId": 1812 // id of deaeler
-	}
+		"type": 0,
+		"dealerAssessmentAssignmentId": 99,
+    "dealerId": 391,
+    "vendorId": 1812
+	},
+	  {
+    "id": 200,
+    "modified_on": "2025-04-24T09:05:04.638Z",
+    "status": "Approved",
+    "type": 3,
+    "dealerAssessmentAssignmentId": 102,
+    "dealerId": 392,
+    "vendorId": 1813
+  }
 ]
